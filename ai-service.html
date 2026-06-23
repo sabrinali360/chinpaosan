@@ -1,0 +1,396 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>金寶山寵物生命禮儀｜AI 智能客服 Prototype</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg:            #FFFFFF;
+      --surface:       #FFFFFF;
+      --surface-2:     #F8F8F8;
+      --fg:            #2B2B2B;
+      --fg-muted:      #666666;
+      --ink:           #2B2B2B;
+      --muted:         #BF9D5B;
+      --muted-2:       #D8BE89;
+      --border:        rgba(191, 157, 91, 0.22);
+      --accent:        #BF9D5B;
+      --accent-strong: #D8BE89;
+      --success:       #3a7d4a;
+      --font-display:  "Noto Serif TC", serif;
+      --font-body:     "Noto Sans TC", sans-serif;
+      --radius:        20px;
+      --radius-sm:     14px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: var(--font-body);
+      color: var(--fg);
+      background: var(--bg);
+    }
+    a { color: inherit; text-decoration: none; }
+    button, input { font: inherit; }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      padding: 18px clamp(20px, 4vw, 48px);
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid rgba(191, 157, 91, 0.18);
+      box-shadow: 0 1px 16px rgba(0, 0, 0, 0.06);
+    }
+    .brand {
+      font-family: var(--font-display);
+      font-size: 20px;
+      letter-spacing: 0.05em;
+      color: var(--accent);
+    }
+    .nav {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .nav a {
+      min-height: 42px;
+      padding: 0 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(43, 43, 43, 0.12);
+      display: inline-flex;
+      align-items: center;
+      transition: border-color 180ms ease, color 180ms ease;
+    }
+    .nav a:hover { border-color: var(--accent); color: var(--accent); }
+    .page {
+      padding: clamp(24px, 4vw, 52px);
+      display: grid;
+      grid-template-columns: 320px minmax(0, 1fr) 320px;
+      gap: 18px;
+      min-height: calc(100vh - 78px);
+    }
+    .panel, .chat-shell, .intent-card, .faq-card, .summary-card, .message, .entry-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+    }
+    .panel, .chat-shell, .summary-card { padding: 20px; }
+    .eyebrow {
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+    h1, h2, h3 {
+      margin: 8px 0 0;
+      font-family: var(--font-display);
+      letter-spacing: -0.02em;
+      color: var(--fg);
+    }
+    h1 { font-size: clamp(32px, 4vw, 48px); line-height: 1.12; }
+    h2 { font-size: 26px; }
+    h3 { font-size: 20px; }
+    p { line-height: 1.65; }
+    .panel p, .summary-card p { color: var(--fg-muted); margin-bottom: 0; }
+    .entry-list, .faq-list, .quick-grid {
+      display: grid;
+      gap: 12px;
+      margin-top: 18px;
+    }
+    .entry-card, .intent-card, .faq-card {
+      padding: 16px;
+      border-radius: var(--radius-sm);
+    }
+    .entry-card strong, .faq-card strong {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--fg);
+    }
+    .entry-card span, .faq-card span { color: var(--fg-muted); font-size: 14px; }
+    .chat-shell {
+      display: grid;
+      grid-template-rows: auto auto minmax(0, 1fr) auto;
+      gap: 18px;
+      min-height: 0;
+    }
+    .chat-banner {
+      padding: 18px;
+      border-radius: var(--radius-sm);
+      background: rgba(191, 157, 91, 0.08);
+      border: 1px solid rgba(191, 157, 91, 0.18);
+      color: var(--fg-muted);
+      font-size: 14px;
+    }
+    .quick-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      margin-top: 0;
+    }
+    .quick-grid button, .send-btn, .faq-filter {
+      min-height: 44px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--fg);
+      cursor: pointer;
+      padding: 0 14px;
+      font-size: 14px;
+      transition: border-color 160ms ease, background 160ms ease;
+    }
+    .quick-grid button:hover, .faq-filter:hover {
+      border-color: var(--accent);
+      background: rgba(191, 157, 91, 0.06);
+    }
+    .messages {
+      min-height: 0;
+      overflow: auto;
+      display: grid;
+      gap: 12px;
+      padding-right: 4px;
+    }
+    .message {
+      padding: 14px 16px;
+      max-width: 88%;
+      border-radius: var(--radius-sm);
+    }
+    .message.user {
+      justify-self: end;
+      background: rgba(191, 157, 91, 0.12);
+      border-color: rgba(191, 157, 91, 0.2);
+      color: var(--fg);
+    }
+    .message.bot {
+      background: var(--surface-2);
+      color: var(--fg);
+    }
+    .composer {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+    }
+    .composer input {
+      min-height: 48px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      padding: 0 14px;
+      background: #FFFFFF;
+      color: var(--fg);
+    }
+    .composer input::placeholder { color: var(--fg-muted); }
+    .send-btn {
+      background: var(--accent);
+      color: #FFFFFF;
+      border-color: transparent;
+      font-weight: 700;
+    }
+    .send-btn:hover { background: var(--accent-strong); }
+    .right-col {
+      display: grid;
+      gap: 18px;
+      align-content: start;
+    }
+    .intent-card {
+      padding: 18px;
+    }
+    .intent-card ul {
+      margin: 12px 0 0;
+      padding-left: 18px;
+      display: grid;
+      gap: 8px;
+      color: var(--fg-muted);
+    }
+    .faq-toolbar {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+    .faq-filter.active {
+      background: rgba(191, 157, 91, 0.12);
+      border-color: rgba(191, 157, 91, 0.32);
+      color: var(--accent);
+    }
+    @media (max-width: 1180px) {
+      .page { grid-template-columns: 1fr; }
+      .quick-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 720px) {
+      .topbar { flex-direction: column; align-items: start; }
+      .quick-grid, .composer { grid-template-columns: 1fr; }
+      .page { padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">金寶山寵物生命禮儀｜AI 智能客服</div>
+    <nav class="nav">
+      <a href="pet-funeral-home.html">首頁</a>
+      <a href="video.html">影音專區</a>
+      <a href="ai-service.html">AI 智能客服</a>
+    </nav>
+  </header>
+
+  <main class="page">
+    <aside class="panel">
+      <div class="eyebrow">Intent Entry</div>
+      <h2>先分流，再進對話。</h2>
+      <p>完整客服頁承接首頁與影音頁的飄浮球。左側不放過多行銷內容，只保留使用者最常見的入口情境。</p>
+      <div class="entry-list">
+        <article class="entry-card">
+          <strong>寵物剛過世</strong>
+          <span>快速取得安置方式、夜間接體與第一步該做什麼。</span>
+        </article>
+        <article class="entry-card">
+          <strong>我想比較服務方案</strong>
+          <span>用對話方式整理個別火化、集體火化與告別儀式差異。</span>
+        </article>
+        <article class="entry-card">
+          <strong>我想先看內容</strong>
+          <span>帶去毛孩故事、流程解說與常見問題影音。</span>
+        </article>
+      </div>
+    </aside>
+
+    <section class="chat-shell">
+      <div>
+        <div class="eyebrow">Conversational Service</div>
+        <h1>把高情緒、高重複的詢問，先穩穩接住。</h1>
+      </div>
+      <div class="chat-banner">
+        這一頁示範三件事：可直接發問、可用快捷情境、可把內容與 FAQ 重新整理成下一步。不是靜態示意圖。
+      </div>
+      <div class="quick-grid">
+        <button type="button" data-quick="寵物剛過世，我現在該先怎麼安置？">緊急處理</button>
+        <button type="button" data-quick="幫我說明接體與告別流程。">服務流程</button>
+        <button type="button" data-quick="我想知道個別火化與集體火化差別。">方案差異</button>
+        <button type="button" data-quick="帶我看相關影音與常見問題。">影音與 FAQ</button>
+      </div>
+      <div class="messages" id="messages">
+        <div class="message bot">您好，我是金寶山寵物生命禮儀 AI 助理。若您正處於緊急情況，我可以先幫您整理安置步驟與接體方式；若您還在了解服務，也可以先帶您比較流程與方案。</div>
+      </div>
+      <form class="composer" id="chat-form">
+        <input id="chat-input" name="message" placeholder="例如：半夜離世怎麼聯繫？個別火化會怎麼進行？" />
+        <button class="send-btn" type="submit">送出提問</button>
+      </form>
+    </section>
+
+    <aside class="right-col">
+      <section class="summary-card">
+        <div class="eyebrow">Why It Matters</div>
+        <h3>提案上要說清楚的，不是只有聊天視窗。</h3>
+        <p>右側保留營運與內容模組：一邊展示客服能處理的意圖，一邊整理 FAQ 範圍，讓決策者知道未來如何接 RAG 與真人轉接。</p>
+      </section>
+      <section class="intent-card">
+        <div class="eyebrow">Coverage</div>
+        <h3>客服當前可承接的問題</h3>
+        <ul>
+          <li>初步安置、夜間流程、接體安排</li>
+          <li>方案差異、是否需要告別式、園區交通</li>
+          <li>影音內容導流、FAQ 梳理、真人諮詢銜接</li>
+        </ul>
+      </section>
+      <section class="intent-card">
+        <div class="eyebrow">FAQ Scope</div>
+        <h3>常見問題</h3>
+        <div class="faq-toolbar">
+          <button class="faq-filter active" type="button" data-faq="all">全部</button>
+          <button class="faq-filter" type="button" data-faq="urgent">緊急</button>
+          <button class="faq-filter" type="button" data-faq="service">服務</button>
+          <button class="faq-filter" type="button" data-faq="content">內容</button>
+        </div>
+        <div class="faq-list" id="faq-list"></div>
+      </section>
+    </aside>
+  </main>
+
+  <script>
+    (function () {
+      const replies = [
+        {
+          match: ["安置", "過世", "半夜", "緊急"],
+          text: "如果是剛離世的情況，建議先讓毛孩平放、保持環境通風，並準備毛巾或薄毯輕覆。若需要夜間協助，客服可先收集所在地、體型與聯絡方式，再銜接接體安排。"
+        },
+        {
+          match: ["流程", "接體", "告別"],
+          text: "目前規劃的四步驟是：諮詢確認、接體或親送、告別與火化安排、骨灰交付與後續紀念。完整網站會再依宗教與儀式需求延伸說明。"
+        },
+        {
+          match: ["個別", "集體", "方案"],
+          text: "個別火化適合希望保留骨灰與安排專屬送別的家庭；集體火化則較適合希望流程單純的情況。這一版會先以對話導讀差異，再視情況導向真人諮詢。"
+        },
+        {
+          match: ["影音", "FAQ", "內容", "影片"],
+          text: "影音專區會提供毛孩故事、禮儀師日誌與流程解說。我也可以先幫您整理成幾個適合轉給家人的重點，再決定要不要看片。"
+        }
+      ];
+      const faqs = [
+        { kind: "urgent", q: "半夜離世可以先做哪些處理？" },
+        { kind: "urgent", q: "需要多久內安排接體？" },
+        { kind: "service", q: "個別火化與集體火化的差異是什麼？" },
+        { kind: "service", q: "若想安排告別儀式，網站會怎麼引導？" },
+        { kind: "content", q: "哪些影片適合先讓家人了解流程？" },
+        { kind: "content", q: "AI 能不能把影片重點整理成摘要？" }
+      ];
+      const messages = document.getElementById("messages");
+      const input = document.getElementById("chat-input");
+      const form = document.getElementById("chat-form");
+      const faqList = document.getElementById("faq-list");
+      function append(role, text) {
+        const node = document.createElement("div");
+        node.className = "message " + role;
+        node.textContent = text;
+        messages.appendChild(node);
+        messages.scrollTop = messages.scrollHeight;
+      }
+      function resolveReply(text) {
+        const found = replies.find((item) => item.match.some((token) => text.includes(token)));
+        return found ? found.text : "我已收到您的提問。這一版先示範 AI 客服的入口、分流與語氣，後續可再接入更完整的知識庫內容與真人轉接機制。";
+      }
+      function renderFaq(kind) {
+        faqList.innerHTML = "";
+        faqs.filter((item) => kind === "all" || item.kind === kind).forEach((item) => {
+          const card = document.createElement("article");
+          card.className = "faq-card";
+          card.innerHTML = "<strong>" + item.q + "</strong><span>可直接點擊作為下一輪提問，或由 AI 先整理重點。</span>";
+          card.addEventListener("click", () => {
+            append("user", item.q);
+            append("bot", resolveReply(item.q));
+          });
+          faqList.appendChild(card);
+        });
+      }
+      document.querySelectorAll("[data-quick]").forEach((button) => {
+        button.addEventListener("click", () => {
+          const text = button.getAttribute("data-quick");
+          append("user", text);
+          append("bot", resolveReply(text));
+        });
+      });
+      document.querySelectorAll("[data-faq]").forEach((button) => {
+        button.addEventListener("click", () => {
+          const kind = button.getAttribute("data-faq");
+          document.querySelectorAll("[data-faq]").forEach((node) => node.classList.toggle("active", node === button));
+          renderFaq(kind);
+        });
+      });
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const text = input.value.trim();
+        if (!text) return;
+        append("user", text);
+        append("bot", resolveReply(text));
+        input.value = "";
+      });
+      renderFaq("all");
+    })();
+  </script>
+</body>
+</html>

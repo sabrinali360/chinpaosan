@@ -1,0 +1,1002 @@
+<!doctype html>
+<html lang="zh-Hant"><head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>金寶山寵物生命禮儀｜影音專區 Prototype</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&amp;family=Noto+Serif+TC:wght@500;600;700&amp;display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:            #FFFFFF;
+      --surface:       #F8F8F8;
+      --surface-2:     #EEEEEE;
+      --fg:            #2B2B2B;
+      --fg-muted:      #666666;
+      --muted:         #BF9D5B;
+      --muted-2:       #D8BE89;
+      --border:        rgba(191, 157, 91, 0.22);
+      --accent:        #BF9D5B;
+      --accent-strong: #D8BE89;
+      --success:       #3a7d4a;
+      --shadow:        0 8px 40px rgba(0, 0, 0, 0.08);
+      --font-display:  "Noto Serif TC", serif;
+      --font-body:     "Noto Sans TC", sans-serif;
+      --font-mono:     "JetBrains Mono", ui-monospace, monospace;
+      --radius:        20px;
+      --radius-sm:     14px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--fg);
+    }
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px clamp(20px, 3vw, 48px);
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid rgba(191, 157, 91, 0.18);
+      box-shadow: 0 1px 16px rgba(0, 0, 0, 0.06);
+    }
+    .brand-lockup { display: grid; gap: 2px; }
+    .brand-kicker {
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--fg-muted);
+    }
+    .brand-name {
+      font-family: var(--font-display);
+      font-size: 20px;
+      letter-spacing: 0.06em;
+      color: var(--accent);
+    }
+    .nav {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: flex-end;
+    }
+    .nav a, .nav .ghost {
+      min-height: 42px;
+      padding: 0 16px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid rgba(43, 43, 43, 0.12);
+      color: var(--fg);
+      font-size: 14px;
+      transition: border-color 180ms ease, color 180ms ease;
+    }
+    .nav .ghost:hover, .nav a:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    .hero {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: clamp(24px, 4vw, 40px);
+      padding: clamp(32px, 5vw, 72px) clamp(20px, 5vw, 80px) 28px;
+      align-items: stretch;
+    }
+    .hero-copy h1 {
+      margin: 10px 0 0;
+      font-family: var(--font-display);
+      font-size: clamp(40px, 6vw, 68px);
+      line-height: 1.08;
+      letter-spacing: -0.02em;
+      max-width: 8.5ch;
+      color: var(--fg);
+    }
+    .eyebrow {
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .hero-copy p {
+      max-width: 56ch;
+      color: var(--fg-muted);
+      font-size: 17px;
+    }
+    .hero-card, .player, .side-panel, .video-card, .queue-item {
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: #FFFFFF;
+    }
+    .hero-card {
+      padding: 24px;
+      display: grid;
+      gap: 16px;
+      min-height: 320px;
+      background: var(--surface);
+    }
+    .hero-card strong {
+      display: block;
+      font-size: 30px;
+      font-family: var(--font-display);
+      color: var(--fg);
+    }
+    .hero-card p { margin: 0; color: var(--fg-muted); }
+    .chips {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 22px;
+    }
+    .chip {
+      min-height: 38px;
+      border-radius: 999px;
+      border: 1px solid rgba(43, 43, 43, 0.14);
+      background: transparent;
+      color: var(--fg);
+      padding: 0 14px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: border-color 160ms ease, background 160ms ease, color 160ms ease;
+    }
+    .chip:hover { border-color: var(--accent); color: var(--accent); }
+    .chip.active {
+      background: rgba(191, 157, 91, 0.12);
+      border-color: rgba(191, 157, 91, 0.32);
+      color: var(--accent);
+    }
+    .main {
+      display: grid;
+      grid-template-columns: minmax(0, 1.3fr) minmax(300px, 0.7fr);
+      gap: 20px;
+      padding: 0 clamp(20px, 5vw, 80px) 90px;
+    }
+    .player {
+      padding: 22px;
+      overflow: hidden;
+    }
+    /* 影片海報保留深色 overlay — 這是影音內容，深色背景合理 */
+    .poster {
+      min-height: 420px;
+      border-radius: calc(var(--radius) - 6px);
+      padding: 28px;
+      display: grid;
+      align-content: end;
+      background:
+        linear-gradient(180deg, rgba(0,0,0,0.08), rgba(0,0,0,0.62)),
+        linear-gradient(135deg, rgba(191,157,91,0.22), rgba(26,22,18,0.85)),
+        url(img/video.png);
+      color: #F8F5F0;
+    }
+    .poster h2 {
+      margin: 10px 0 10px;
+      font-size: clamp(28px, 4vw, 42px);
+      font-family: var(--font-display);
+      line-height: 1.15;
+      max-width: 10ch;
+      color: #F8F5F0;
+    }
+    .poster p { margin: 0; max-width: 52ch; color: rgba(248, 245, 240, 0.78); }
+    .poster .eyebrow { color: var(--muted-2); }
+    .player-bar {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 14px;
+      align-items: center;
+      margin-top: 18px;
+    }
+    .play-btn {
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      border: 0;
+      background: var(--accent);
+      color: #FFFFFF;
+      cursor: pointer;
+      font-size: 18px;
+      font-weight: 700;
+      transition: background 160ms ease, transform 160ms ease;
+    }
+    .play-btn:hover { background: var(--accent-strong); transform: scale(1.04); }
+    .timeline {
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(43, 43, 43, 0.1);
+      overflow: hidden;
+    }
+    .timeline-fill {
+      width: 18%;
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--accent-strong));
+      transition: width 200ms linear;
+    }
+    .queue {
+      display: grid;
+      gap: 14px;
+    }
+    .queue-item {
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      text-align: left;
+      cursor: pointer;
+      transition: transform 180ms cubic-bezier(0.23, 1, 0.32, 1), border-color 180ms cubic-bezier(0.23, 1, 0.32, 1), box-shadow 180ms ease;
+    }
+    .queue-item:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(191, 157, 91, 0.12); }
+    .queue-item.active { border-color: rgba(191, 157, 91, 0.44); }
+    .queue-item small {
+      display: inline-block;
+      margin-bottom: 8px;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-size: 11px;
+    }
+    .queue-item h4 {
+      margin: 0 0 6px;
+      font-size: 20px;
+      font-family: var(--font-display);
+      color: var(--fg);
+    }
+    .queue-item p {
+      margin: 0;
+      color: var(--fg-muted);
+      font-size: 14px;
+    }
+    .side-panel {
+      padding: 20px;
+      display: grid;
+      gap: 16px;
+      align-content: start;
+      height: fit-content;
+    }
+    .side-panel h3, .panel-title {
+      margin: 0;
+      font-family: var(--font-display);
+      font-size: 26px;
+      color: var(--fg);
+    }
+    .panel-title { font-size: 18px; color: var(--muted); }
+    .side-panel ul {
+      margin: 0;
+      padding-left: 18px;
+      display: grid;
+      gap: 8px;
+      color: var(--fg-muted);
+    }
+    .library {
+      padding: 0 clamp(20px, 5vw, 80px) 96px;
+    }
+    .library-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: clamp(24px, 2.4vw, 42px);
+      align-items: start;
+    }
+    .video-card {
+      display: grid;
+      gap: 18px;
+      justify-items: start;
+      text-decoration: none;
+      color: inherit;
+      transition: transform 180ms ease, opacity 180ms ease;
+    }
+    .video-card:hover { transform: translateY(-4px); }
+    .video-thumb {
+      position: relative;
+      min-height: clamp(360px, 35vw, 520px);
+      overflow: hidden;
+      background:
+        linear-gradient(180deg, rgba(14, 12, 10, 0.08) 0%, rgba(14, 12, 10, 0.38) 55%, rgba(14, 12, 10, 0.82) 100%),
+        radial-gradient(circle at 82% 12%, rgba(0, 165, 220, 0.22), transparent 18%),
+        linear-gradient(135deg, rgba(191, 157, 91, 0.92), rgba(82, 47, 25, 0.54));
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 22px 18px 28px;
+      isolation: isolate;
+    }
+    .video-thumb::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: var(--thumb-bg, linear-gradient(135deg, rgba(191, 157, 91, 0.18), rgba(43, 43, 43, 0.75)));
+      z-index: -2;
+    }
+    .video-thumb::after {
+      content: attr(data-mark);
+      position: absolute;
+      right: -24px;
+      top: 28px;
+      font-family: var(--font-display);
+      font-size: clamp(108px, 9vw, 156px);
+      line-height: 0.78;
+      font-weight: 700;
+      color: rgba(0, 0, 0, 0.22);
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      letter-spacing: 0.02em;
+      pointer-events: none;
+    }
+    .video-thumb-tag {
+      align-self: flex-start;
+      padding: 10px 18px 8px;
+      background: rgba(216, 190, 137, 0.92);
+      color: #FFFFFF;
+      font-family: var(--font-display);
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      line-height: 1;
+    }
+    .video-thumb-copy {
+      display: grid;
+      gap: 14px;
+      color: #FFFFFF;
+    }
+    .video-thumb-headline {
+      margin: 0;
+      font-family: var(--font-display);
+      font-size: clamp(40px, 3vw, 58px);
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      text-shadow: 0 8px 24px rgba(0, 0, 0, 0.24);
+    }
+    .video-thumb-side {
+      align-self: end;
+      font-size: 11px;
+      letter-spacing: 0.28em;
+      writing-mode: vertical-rl;
+      color: rgba(255, 255, 255, 0.82);
+    }
+    .library .video-date {
+      align-self: flex-start;
+      min-width: 0;
+      width: fit-content;
+      max-width: 100%;
+      padding: 16px 24px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(43, 43, 43, 0.16);
+      text-align: left;
+      font-size: 20px;
+      color: #666666;
+      background: #FFFFFF;
+    }
+    .video-card-title {
+      margin: 0;
+      font-size: clamp(26px, 2.2vw, 34px);
+      font-family: var(--font-display);
+      color: var(--fg);
+      line-height: 1.35;
+      letter-spacing: -0.02em;
+    }
+    .video-card-desc {
+      margin: 0;
+      color: var(--fg-muted);
+      font-size: 16px;
+      line-height: 1.9;
+    }
+    /* ── 飄浮客服球 — 訊息視窗風格 ── */
+    .assistant-float {
+      position: fixed;
+      right: 22px;
+      bottom: 20px;
+      z-index: 30;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 12px;
+    }
+    /* chat window */
+    .assistant-drawer {
+      width: min(360px, calc(100vw - 28px));
+      height: 500px;
+      display: grid;
+      grid-template-rows: auto auto 1fr auto;
+      background: rgba(28, 24, 20, 0.98);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-radius: 20px;
+      border: 1px solid rgba(191, 157, 91, 0.18);
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.32);
+      transform: translateY(16px) scale(0.96);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 220ms cubic-bezier(0.23, 1, 0.32, 1), transform 220ms cubic-bezier(0.23, 1, 0.32, 1);
+    }
+    .assistant-drawer.open {
+      transform: translateY(0) scale(1);
+      opacity: 1;
+      pointer-events: auto;
+    }
+    /* 標頭 */
+    .chat-header {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      padding: 14px 14px 13px;
+      border-bottom: 1px solid rgba(191, 157, 91, 0.13);
+    }
+    .chat-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+    }
+    .chat-header-info { flex: 1; min-width: 0; }
+    .chat-header-name {
+      font-weight: 600;
+      font-size: 15px;
+      color: rgba(248, 245, 240, 0.96);
+      font-family: var(--font-display);
+      letter-spacing: 0.01em;
+    }
+    .chat-header-status {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11.5px;
+      color: rgba(248, 245, 240, 0.46);
+      margin-top: 2px;
+      letter-spacing: 0.02em;
+    }
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #4caf82;
+      flex-shrink: 0;
+    }
+    .chat-close {
+      background: transparent;
+      border: 0;
+      color: rgba(248, 245, 240, 0.42);
+      font-size: 22px;
+      line-height: 1;
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 6px;
+      transition: color 160ms, background 160ms;
+    }
+    .chat-close:hover {
+      color: rgba(248, 245, 240, 0.9);
+      background: rgba(255, 255, 255, 0.06);
+    }
+    /* 快捷詞 */
+    .chat-quick {
+      display: flex;
+      gap: 7px;
+      flex-wrap: wrap;
+      padding: 10px 14px 9px;
+      border-bottom: 1px solid rgba(191, 157, 91, 0.1);
+    }
+    .chat-chip {
+      font-size: 12px;
+      padding: 5px 11px;
+      border-radius: 999px;
+      border: 1px solid rgba(191, 157, 91, 0.22);
+      background: rgba(255, 255, 255, 0.04);
+      color: rgba(248, 245, 240, 0.76);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 160ms, border-color 160ms, color 160ms;
+    }
+    .chat-chip:hover {
+      background: rgba(191, 157, 91, 0.14);
+      border-color: var(--accent);
+      color: var(--muted-2);
+    }
+    /* 訊息 */
+    .chat-messages {
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      padding: 14px 14px 10px;
+    }
+    .chat-messages::-webkit-scrollbar { width: 3px; }
+    .chat-messages::-webkit-scrollbar-thumb { background: rgba(191,157,91,0.18); border-radius: 4px; }
+    .msg {
+      max-width: 88%;
+      padding: 10px 14px;
+      font-size: 14px;
+      line-height: 1.58;
+      word-break: break-word;
+    }
+    .msg.bot {
+      background: rgba(255, 255, 255, 0.07);
+      color: rgba(248, 245, 240, 0.9);
+      border-radius: 18px 18px 18px 5px;
+      align-self: flex-start;
+    }
+    .msg.user {
+      background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+      color: #FFFFFF;
+      border-radius: 18px 18px 5px 18px;
+      align-self: flex-end;
+    }
+    /* 打字指示 */
+    .msg-typing {
+      display: flex;
+      gap: 4px;
+      align-items: center;
+      padding: 12px 16px;
+    }
+    .msg-typing span {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: rgba(248, 245, 240, 0.38);
+      animation: typing-dot 1.2s ease-in-out infinite;
+    }
+    .msg-typing span:nth-child(2) { animation-delay: 0.2s; }
+    .msg-typing span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes typing-dot {
+      0%, 80%, 100% { transform: scale(1); opacity: 0.38; }
+      40% { transform: scale(1.3); opacity: 0.9; }
+    }
+    /* 輸入列 */
+    .chat-composer {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px;
+      padding: 10px 12px 12px;
+      border-top: 1px solid rgba(191, 157, 91, 0.11);
+    }
+    .chat-composer input {
+      min-height: 40px;
+      border-radius: 20px;
+      border: 1px solid rgba(191, 157, 91, 0.18);
+      background: rgba(255, 255, 255, 0.06);
+      color: rgba(248, 245, 240, 0.92);
+      padding: 0 14px;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 160ms;
+    }
+    .chat-composer input:focus { border-color: rgba(191, 157, 91, 0.4); }
+    .chat-composer input::placeholder { color: rgba(248, 245, 240, 0.3); }
+    .chat-send-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 0;
+      background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+      color: #FFFFFF;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      transition: transform 160ms, box-shadow 160ms;
+    }
+    .chat-send-btn:hover { transform: scale(1.08); box-shadow: 0 4px 16px rgba(191,157,91,0.4); }
+    /* 觸發圓球 */
+    .assistant-trigger {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      border: 0;
+      background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+      color: #FFFFFF;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      box-shadow: 0 8px 28px rgba(191, 157, 91, 0.44);
+      transition: transform 200ms ease, box-shadow 200ms ease;
+      position: relative;
+    }
+    .assistant-trigger:hover {
+      transform: scale(1.08);
+      box-shadow: 0 10px 34px rgba(191, 157, 91, 0.56);
+    }
+    .trigger-dot {
+      position: absolute;
+      top: 3px;
+      right: 3px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #ef5350;
+      border: 2px solid #FFFFFF;
+      animation: pulse-dot 2.2s ease-in-out infinite;
+    }
+    footer {
+      padding: 40px clamp(20px, 5vw, 80px) 90px;
+      border-top: 1px solid var(--border);
+      background: var(--bg-soft);
+      display: grid;
+      grid-template-columns: 1.2fr 1fr 1fr;
+      gap: 24px;
+    }
+    footer p { color: var(--fg-muted); font-size: 14px; margin: 6px 0 0; }
+    footer a:hover { color: var(--accent); }
+    @keyframes pulse-dot {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.25); opacity: 0.65; }
+    }
+    @media (max-width: 1100px) {
+      .hero, .main,footer { grid-template-columns: 1fr; }
+      .library-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 720px) {
+      .topbar { align-items: start; flex-direction: column; gap: 14px; }
+      .nav { width: 100%; justify-content: flex-start; }
+      .poster { min-height: 320px; }
+      .hero-card { min-height: auto; }
+      .video-thumb {
+        min-height: 340px;
+        padding: 18px 14px 22px;
+      }
+      .library .video-date {
+        width: fit-content;
+      }
+      footer { padding-bottom: 120px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-lockup">
+      <span class="brand-kicker">Chin Pao San Pet Care</span>
+      <span class="brand-name">金寶山寵物生命禮儀</span>
+    </div>
+    <nav class="nav">
+      <a href="index.html">首頁</a>
+      <a href="video.html">影音專區</a>
+      <a class="ghost" href="index.html">與我們聯繫</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-copy">
+        <div class="eyebrow">Immersive Stories</div>
+        <h1 style="color: rgb(0, 0, 0); text-align: start; font-size: 56px; white-space: nowrap; max-width: none;">影音專區</h1>
+        <p></p>
+        <div class="chips" id="category-chips">
+          <button class="chip active" type="button" data-category="all">全部內容</button>
+          <button class="chip" type="button" data-category="story">毛孩故事</button>
+          <button class="chip" type="button" data-category="ritual">禮儀師日誌</button>
+          <button class="chip" type="button" data-category="guide">流程說明</button>
+        </div>
+      </div>
+      
+    </section>
+
+    <section class="main">
+      <div class="player">
+        <article class="poster" id="poster">
+          <div class="eyebrow" id="poster-tag">毛孩故事</div>
+          <h2 id="poster-title">陪伴的最後一天，也可以是最溫柔的一天。</h2>
+          <p id="poster-desc">從陪伴、告別到火化前的準備，以真實家庭視角梳理情緒與流程，讓觀眾知道這不是冷冰冰的作業，而是一場被好好安排的送別。</p>
+        </article>
+        <div class="player-bar">
+          <button class="play-btn" type="button" id="play-btn" aria-label="播放或暫停">▶</button>
+          <div class="timeline" aria-hidden="true">
+            <div class="timeline-fill" id="timeline-fill"></div>
+          </div>
+          <span id="time-label">01:08 / 03:42</span>
+        </div>
+      </div>
+      <aside class="side-panel">
+        <div class="panel-title">精選文章</div>
+        <div class="queue" id="queue"></div>
+        
+        
+      </aside>
+    </section>
+
+    <section class="library" data-od-id="path-1-2" data-od-source-path="path-1-2">
+      <div class="library-grid" id="library-grid"></div>
+    </section>
+  </main>
+
+  <div class="assistant-float">
+    <div class="assistant-drawer" id="assistant-drawer" role="dialog" aria-label="AI 智能客服">
+      <header class="chat-header">
+        <div class="chat-avatar">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+          </svg>
+        </div>
+        <div class="chat-header-info">
+          <div class="chat-header-name">AI 禮儀助理</div>
+          <div class="chat-header-status">
+            <span class="status-dot"></span>線上 · 立即回覆
+          </div>
+        </div>
+        <button class="chat-close" type="button" id="chat-close" aria-label="關閉">×</button>
+      </header>
+      <div class="chat-quick">
+        <button class="chat-chip" type="button" data-q="我想了解這支影片提到的流程。">詢問影片流程</button>
+        <button class="chat-chip" type="button" data-q="寵物剛過世，我現在先做什麼？">緊急處理</button>
+        <button class="chat-chip" type="button" data-q="幫我整理重點，讓我轉給家人看。">整理給家人</button>
+      </div>
+      <div class="chat-messages" id="chat-messages">
+        <div class="msg bot">您好，我是金寶山 AI 助理。看完影片有任何問題，或是現在很慌亂不知道從哪開始，都可以直接跟我說。</div>
+      </div>
+      <form class="chat-composer" id="chat-form" autocomplete="off">
+        <input id="chat-input" name="message" type="text" placeholder="輸入想問的，例如：火化流程如何安排？">
+        <button class="chat-send-btn" type="submit" aria-label="送出">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="m22 2-7 20-4-9-9-4Z"></path><path d="M22 2 11 13"></path>
+          </svg>
+        </button>
+      </form>
+    </div>
+    <button class="assistant-trigger" type="button" id="assistant-trigger" aria-label="開啟 AI 客服">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+      </svg>
+      <span class="trigger-dot"></span>
+    </button>
+  </div>
+  <footer>
+      <div>
+        <div class="brand-name">金寶山寵物生命禮儀</div>
+        <p>從第一時間的緊急安置，到服務流程，希望讓家人在最慌亂的時刻，也能慢慢找到一條清楚、安穩的陪伴</p>
+      </div>
+      <div>
+        <div class="card-label">頁面入口</div>
+        <p><a href="pet-funeral-home.html">首頁</a></p>
+        <p><a href="video.html">影音專區</a></p>
+        <p><a href="ai-service.html">AI 智能客服</a></p>
+      </div>
+      <div>
+        <div class="card-label">陪伴重點</div>
+        <p>先安住情緒，再整理下一步</p>
+        <p>站內飄浮客服球即時接應</p>
+        <p>影音內容陪伴家人慢慢理解流程</p>
+      </div>
+    </footer>
+
+  <script>
+    (function () {
+      const items = [
+        {
+          id: "story-1",
+          category: "story",
+          tag: "毛孩故事",
+          title: "陪伴的最後一天，務必也要溫柔",
+          desc: "從陪伴、告別到火化前的準備，以真實家庭視角梳理情緒與流程。",
+          queue: "以真實家庭視角呈現完整告別節奏",
+          time: "01:08 / 03:42"
+        },
+        {
+          id: "ritual-1",
+          category: "ritual",
+          tag: "禮儀師日誌",
+          title: "第一通電話，禮儀師會先問什麼？",
+          desc: "拆解接線話術、接體安排與情緒安撫，讓使用者知道真人服務的溫度。",
+          queue: "第一線服務的真實現況",
+          time: "00:34 / 02:18"
+        },
+        {
+          id: "guide-1",
+          category: "guide",
+          tag: "流程說明",
+          title: "接體、告別、火化到安置，四步驟一次看懂。",
+          desc: "用圖像與敘述壓縮家屬最常問的流程問題，並保留 AI 進一步解釋入口。",
+          queue: "把 FAQ 最容易卡住的資訊做成可重播內容。",
+          time: "01:56 / 04:10"
+        }
+      ];
+      const extras = [
+        {
+          category: "story",
+          date: "2026/06/13",
+          label: "生命知識站",
+          mark: "GOLD",
+          coverTitle: "驚！棺木翻倒\n代誌大條了…",
+          title: "【禮儀小知識】親人棺木翻倒代表什麼？家屬最怕這…",
+          desc: "在傳統喪禮文化中，棺木翻倒被視為相當嚴重的意外，不只是現場危險，更牽涉許多民俗禁忌與家屬情緒。從實際流程解析，為何長輩對這件事特別在意。",
+          theme: "linear-gradient(180deg, rgba(4, 20, 35, 0.08) 0%, rgba(7, 18, 30, 0.38) 48%, rgba(7, 18, 30, 0.86) 100%), linear-gradient(140deg, rgba(33, 116, 163, 0.84), rgba(169, 97, 41, 0.78) 42%, rgba(36, 31, 27, 0.88) 100%)"
+        },
+        {
+          category: "ritual",
+          date: "2026/06/11",
+          label: "生命知識站",
+          mark: "GOLD",
+          coverTitle: "女兒不能分遺產？\n法律早有保障！",
+          title: "【禮儀小知識】女兒不能分遺產？很多人其實都搞錯了",
+          desc: "還有人以為女兒不能分遺產嗎？其實依照台灣現行法律，子女繼承權男女平等，但不少家庭仍深受傳統觀念影響。用最簡單的方式整理遺產繼承常見誤解。",
+          theme: "linear-gradient(180deg, rgba(33, 20, 10, 0.08) 0%, rgba(33, 20, 10, 0.34) 44%, rgba(23, 16, 11, 0.84) 100%), linear-gradient(140deg, rgba(197, 175, 152, 0.84), rgba(92, 64, 47, 0.74) 52%, rgba(24, 19, 16, 0.88) 100%)"
+        },
+        {
+          category: "guide",
+          date: "2026/06/09",
+          label: "生命知識站",
+          mark: "GOLD",
+          coverTitle: "親人過世後對年\n能燒庫錢元寶嗎？",
+          title: "【禮儀大哉問】親人過世未滿一年能燒庫錢與元寶嗎？",
+          desc: "親人過世未滿一年，到底能不能燒元寶與庫錢？很多家庭因習俗不同產生爭議。不同宗教與地方習慣其實都有差異，一次搞懂百日、對年與祭祀安排。",
+          theme: "linear-gradient(180deg, rgba(38, 12, 6, 0.08) 0%, rgba(38, 12, 6, 0.34) 45%, rgba(35, 13, 8, 0.84) 100%), linear-gradient(140deg, rgba(162, 86, 42, 0.82), rgba(127, 38, 25, 0.76) 46%, rgba(51, 23, 19, 0.9) 100%)"
+        }
+      ];
+      let activeId = items[0].id;
+      let playing = false;
+      let progress = 18;
+      const queue = document.getElementById("queue");
+      const libraryGrid = document.getElementById("library-grid");
+      const posterTag = document.getElementById("poster-tag");
+      const posterTitle = document.getElementById("poster-title");
+      const posterDesc = document.getElementById("poster-desc");
+      const timeLabel = document.getElementById("time-label");
+      const timelineFill = document.getElementById("timeline-fill");
+      const playBtn = document.getElementById("play-btn");
+      const chips = Array.from(document.querySelectorAll("[data-category]"));
+      function currentItem() {
+        return items.find((item) => item.id === activeId) || items[0];
+      }
+      function renderQueue() {
+        queue.innerHTML = "";
+        items.forEach((item) => {
+          const card = document.createElement("button");
+          card.type = "button";
+          card.className = "queue-item" + (item.id === activeId ? " active" : "");
+          card.innerHTML = "<small>" + item.tag + "</small><h3>" + item.title + "</h3><p>" + item.queue + "</p>";
+          card.addEventListener("click", () => {
+            activeId = item.id;
+            progress = 18;
+            renderCurrent();
+          });
+          queue.appendChild(card);
+        });
+      }
+      function renderLibrary(category) {
+        const list = extras.filter((item) => category === "all" || item.category === category);
+        libraryGrid.innerHTML = "";
+        list.forEach((item) => {
+          const article = document.createElement("article");
+          article.className = "video-card";
+          article.innerHTML =
+            "<div class='video-thumb' data-mark='" + item.mark + "' style=\"--thumb-bg:" + item.theme + ";\">" +
+              "<div class='video-thumb-tag'>" + item.label + "</div>" +
+              "<div class='video-thumb-copy'>" +
+                "<div class='video-thumb-side'>MEMORIAL SERVICES</div>" +
+                "<h3 class='video-thumb-headline'>" + item.coverTitle.replace(/\n/g, "<br>") + "</h3>" +
+              "</div>" +
+            "</div>" +
+            "<div class='video-date'>" + item.date + "</div>" +
+            "<h3 class='video-card-title'>" + item.title + "</h3>" +
+            "<p class='video-card-desc'>" + item.desc + "</p>";
+          libraryGrid.appendChild(article);
+        });
+      }
+      function renderCurrent() {
+        const item = currentItem();
+        posterTag.textContent = item.tag;
+        posterTitle.textContent = item.title;
+        posterDesc.textContent = item.desc;
+        timeLabel.textContent = item.time;
+        timelineFill.style.width = progress + "%";
+        renderQueue();
+      }
+      let timer;
+      function setPlaying(next) {
+        playing = next;
+        playBtn.textContent = playing ? "❚❚" : "▶";
+        clearInterval(timer);
+        if (playing) {
+          timer = setInterval(() => {
+            progress = Math.min(progress + 2, 100);
+            timelineFill.style.width = progress + "%";
+            if (progress >= 100) {
+              setPlaying(false);
+              progress = 18;
+              timelineFill.style.width = progress + "%";
+            }
+          }, 400);
+        }
+      }
+      playBtn.addEventListener("click", () => setPlaying(!playing));
+      chips.forEach((chip) => {
+        chip.addEventListener("click", () => {
+          const category = chip.getAttribute("data-category");
+          chips.forEach((node) => node.classList.toggle("active", node === chip));
+          renderLibrary(category);
+        });
+      });
+      // ── 飄浮客服球對話邏輯 ──
+      (function () {
+        const drawer = document.getElementById("assistant-drawer");
+        const trigger = document.getElementById("assistant-trigger");
+        const closeBtn = document.getElementById("chat-close");
+        const messages = document.getElementById("chat-messages");
+        const form = document.getElementById("chat-form");
+        const input = document.getElementById("chat-input");
+        const dot = trigger ? trigger.querySelector(".trigger-dot") : null;
+        const replies = [
+          {
+            match: ["流程", "接體", "告別", "影片", "了解"],
+            text: "影片中提到的四個主要階段：安置 → 接體 → 告別儀式 → 火化後安放。每個階段都可以依家屬需求調整節奏，不需要一次決定所有細節。需要我再細說哪一段嗎？"
+          },
+          {
+            match: ["過世", "半夜", "先做什麼", "緊急"],
+            text: "先讓毛孩平躺、保持環境通風，準備一條乾淨毯子輕覆即可。不需要急著做決定——您可以留下所在地與體型資訊，我幫您聯繫接體安排。"
+          },
+          {
+            match: ["整理", "家人", "重點", "轉給"],
+            text: "好的，以下是可以直接轉給家人的三個重點：① 金寶山提供 24h 聯絡與夜間接體；② 個別火化可保留骨灰，安排專屬告別儀式；③ 若情緒難以整理，可先透過 AI 客服詢問，不需要馬上打電話。"
+          },
+          {
+            match: ["個別", "集體", "火化", "方案"],
+            text: "個別火化：專屬爐次、可安排家屬全程陪同、取回骨灰後自行安置或委託樹葬花葬。\n集體火化：費用較低、流程簡化，適合希望讓毛孩自然回歸的家庭。需要我比較費用或細節嗎？"
+          },
+          {
+            match: ["預約", "諮詢", "電話", "聯絡"],
+            text: "您可以直接前往 AI 客服頁進行完整諮詢，或由客服頁轉接真人服務。我也可以先幫您整理幾個問題，讓預約通話更有效率。"
+          }
+        ];
+        function scrollBottom() {
+          messages.scrollTop = messages.scrollHeight;
+        }
+        function append(role, text) {
+          const div = document.createElement("div");
+          div.className = "msg " + role;
+          div.textContent = text;
+          messages.appendChild(div);
+          scrollBottom();
+        }
+        function showTyping() {
+          const t = document.createElement("div");
+          t.className = "msg bot msg-typing";
+          t.id = "typing-indicator";
+          t.innerHTML = "<span></span><span></span><span></span>";
+          messages.appendChild(t);
+          scrollBottom();
+          return t;
+        }
+        function reply(text) {
+          const found = replies.find((r) => r.match.some((k) => text.includes(k)));
+          return found ? found.text : "我收到您的提問了。您可以先告訴我現在最急的是哪一件事，我會幫您把順序理清，再帶到合適的流程說明或真人協助。";
+        }
+        function openChat() {
+          drawer.classList.add("open");
+          if (dot) dot.style.display = "none";
+          setTimeout(() => input && input.focus(), 260);
+        }
+        function closeChat() { drawer.classList.remove("open"); }
+        if (trigger) trigger.addEventListener("click", () => drawer.classList.contains("open") ? closeChat() : openChat());
+        if (closeBtn) closeBtn.addEventListener("click", closeChat);
+        document.querySelectorAll(".chat-chip").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            const text = btn.getAttribute("data-q");
+            openChat();
+            setTimeout(() => {
+              append("user", text);
+              const t = showTyping();
+              setTimeout(() => { t.remove(); append("bot", reply(text)); }, 640);
+            }, 260);
+          });
+        });
+        if (form) form.addEventListener("submit", (e) => {
+          e.preventDefault();
+          const text = input.value.trim();
+          if (!text) return;
+          append("user", text);
+          input.value = "";
+          const t = showTyping();
+          setTimeout(() => { t.remove(); append("bot", reply(text)); }, 720);
+        });
+      })();
+      renderCurrent();
+      renderLibrary("all");
+    })();
+  </script>
+
+
+
+</body></html>

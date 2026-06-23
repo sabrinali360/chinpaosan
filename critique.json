@@ -1,0 +1,26 @@
+{
+  "kind": "critique-panel",
+  "score": 4,
+  "axes": {
+    "clarity": {
+      "score": 5,
+      "notes": "首頁已從企業提案導覽轉成飼主第一時間入口，首屏、四步流程與客服球都在回答『現在先做什麼』。"
+    },
+    "hierarchy": {
+      "score": 4,
+      "notes": "主 CTA 先導向首頁內的緊急入口，次 CTA 再導到 AI，資訊優先序比前一版更穩。"
+    },
+    "typography": {
+      "score": 4,
+      "notes": "沿用 Noto Serif TC 與 Noto Sans TC 的儀式感組合，標題情緒更柔和，但還保留金寶山的正式度。"
+    },
+    "motion": {
+      "score": 4,
+      "notes": "互動仍維持克制，客服球與按鈕的動作只承擔引導，不搶情緒節奏。"
+    },
+    "brand": {
+      "score": 4,
+      "notes": "仍守住深墨褐、石色留白與金色單一強調，沒有滑回療癒系模板或過度暖色安撫頁。"
+    }
+  }
+}
