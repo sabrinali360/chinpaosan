@@ -1723,6 +1723,31 @@
         padding: 22px;
       }
 
+      #services .service-grid {
+        display: flex;
+        gap: 14px;
+        margin: 0 -20px;
+        padding: 0 20px 10px;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        scrollbar-width: none;
+      }
+
+      #services .service-grid::-webkit-scrollbar {
+        display: none;
+      }
+
+      #services .service-card {
+        flex: 0 0 min(78vw, 300px);
+        padding: 22px 20px;
+        scroll-snap-align: start;
+      }
+
+      #services .service-card h3 {
+        font-size: 22px;
+        line-height: 1.25;
+      }
+
       .gallery-copy {
         padding: 22px;
       }
