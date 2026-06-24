@@ -375,8 +375,10 @@
 
     .video-card {
       display: grid;
-      gap: 18px;
+      gap: 14px;
       justify-items: start;
+      overflow: hidden;
+      padding-bottom: 20px;
       text-decoration: none;
       color: inherit;
       transition: transform 180ms ease, opacity 180ms ease;
@@ -388,7 +390,8 @@
 
     .video-thumb {
       position: relative;
-      min-height: clamp(360px, 35vw, 520px);
+      width: 100%;
+      aspect-ratio: 4 / 3;
       overflow: hidden;
       background:
         linear-gradient(180deg, rgba(14, 12, 10, 0.08) 0%, rgba(14, 12, 10, 0.38) 55%, rgba(14, 12, 10, 0.82) 100%),
@@ -465,26 +468,29 @@
       min-width: 0;
       width: fit-content;
       max-width: 100%;
-      padding: 16px 24px 14px;
-      border-radius: 999px;
+      padding: 8px 14px 7px;
+      border-radius: 16px;
       border: 1px solid rgba(43, 43, 43, 0.16);
       text-align: left;
-      font-size: 20px;
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 1;
       color: #666666;
-      background: #FFFFFF;
+      background: #FAFAFA;
+      margin: 0 18px;
     }
 
     .video-card-title {
-      margin: 0;
-      font-size: clamp(26px, 2.2vw, 34px);
+      margin: 0 18px;
+      font-size: clamp(22px, 1.8vw, 28px);
       font-family: var(--font-display);
       color: var(--fg);
-      line-height: 1.35;
+      line-height: 1.4;
       letter-spacing: -0.02em;
     }
 
     .video-card-desc {
-      margin: 0;
+      margin: 0 18px;
       color: var(--fg-muted);
       font-size: 16px;
       line-height: 1.9;
@@ -860,7 +866,7 @@
       }
 
       .video-thumb {
-        min-height: 340px;
+        aspect-ratio: 16 / 11;
         padding: 18px 14px 22px;
       }
 
