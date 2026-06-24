@@ -500,6 +500,7 @@
       flex-direction: column;
       align-items: flex-end;
       gap: 12px;
+      pointer-events: none;
     }
 
     /* chat window */
@@ -524,6 +525,10 @@
     .assistant-drawer.open {
       transform: translateY(0) scale(1);
       opacity: 1;
+      pointer-events: auto;
+    }
+
+    .assistant-trigger {
       pointer-events: auto;
     }
 

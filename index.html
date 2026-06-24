@@ -1366,6 +1366,7 @@
       flex-direction: column;
       align-items: flex-end;
       gap: 12px;
+      pointer-events: none;
     }
 
     .drawer {
@@ -1388,6 +1389,10 @@
     .drawer.open {
       transform: translateY(0) scale(1);
       opacity: 1;
+      pointer-events: auto;
+    }
+
+    .float-trigger {
       pointer-events: auto;
     }
 
